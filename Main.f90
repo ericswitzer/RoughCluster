@@ -60,7 +60,9 @@ PROGRAM main
     CLOSE(2)
 
     ! Write mantle positions
-    OPEN(unit=2,file='./Output/cluster01mantle.dat',status='replace')
+    OPEN(unit=2,file='./Output/cluster01_mantle.dat',status='replace')
+    WRITE(unit=2,fmt=*)n_mantle
+    WRITE(unit=2,fmt=*)
     DO i=1,n_mantle
         WRITE(unit=2,fmt=*),mantle_array(i)
     END DO

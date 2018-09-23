@@ -156,15 +156,15 @@ MODULE rough_cluster_module
         
             IMPLICIT NONE
             
-            INTEGER*8 :: i, j, num_surface_target, random_number, n_original, index, num_sample
+            INTEGER*8 :: i, j, num_surface_target, random_number, n_mantle_original, index, num_sample
             INTEGER*8, INTENT(inout) :: n
-            INTEGER*8, DIMENSION(n) :: track
+            INTEGER*8, DIMENSION(:), ALLOCATABLE :: track
             REAL*8, INTENT(in) :: desired_sigma_percent
             REAL*8 :: mantle_percent, r_max, r_core_max
             REAL*8 :: r_gaussian, pi, theta_random, phi_random
             REAL*8 :: sigma_target, sum_y, sum_y_sq, avg_y, avg_y_sq, sigma
             REAL*8, DIMENSION(:,:), ALLOCATABLE, INTENT(inout) :: r, v
-            REAL*8, DIMENSION(n) :: r_modulus, height
+            REAL*8, DIMENSION(:), ALLOCATABLE :: r_modulus, height
             REAL*8, DIMENSION(:), ALLOCATABLE :: r_random_array
             REAL*8, DIMENSION(:,:), ALLOCATABLE :: temp
             INTEGER*8, INTENT(out) :: n_mantle
@@ -173,7 +173,7 @@ MODULE rough_cluster_module
             
             REAL*8 :: radius_mantle_avg, radius_mantle_avg_sq, rho_mantle_avg, radius_new_max, radius_new_max_sq
                        
-            n_original = n
+            ALLOCATE(r_modulus(n),height(n),track(n))
             
             pi_agnost = 4.0d0*ATAN(1.0d0)
             
@@ -200,10 +200,11 @@ MODULE rough_cluster_module
             num_sample = 0
             DO i=1,n
                 IF(r_modulus(i) > r_core_max) THEN
-                    track(num_sample+1) = i       
+                    track(num_sample+1) = i     
                     num_sample = num_sample + 1
                 END IF
             END DO
+            n_mantle_original = num_sample
             
             ! Determine the average radius of the mantle, and then the reduced surface particle density for that radius
             radius_mantle_avg = ((r_max - r_core_max)/2.0d0)+r_core_max
@@ -264,8 +265,8 @@ MODULE rough_cluster_module
             END DO
             
             ! Calculate sigma for the new cluster level
-            height = 0
-            num_sample = 0.0d0
+            height = 0.0d0
+            num_sample = 0
             sum_y = 0.0d0
             sum_y_sq = 0.d0
             
@@ -296,12 +297,12 @@ MODULE rough_cluster_module
             n = n + num_surface_target
             
             ! Report back number of mantle particles and new mantle array
-            n_mantle = num_surface_target + num_sample
-            ALLOCATE(mantle_array(n))
+            n_mantle = num_surface_target + n_mantle_original
+            ALLOCATE(mantle_array(n_mantle))
             mantle_array = 0
             j=1
             ! Add original mantle atoms
-            DO i=1,num_sample
+            DO i=1,n_mantle_original
                 IF(track(i) /= 0) THEN
                     index = track(i)
                     mantle_array(j) = index
@@ -310,7 +311,8 @@ MODULE rough_cluster_module
             END DO
             ! Add new mantle atoms
             DO i=1,num_surface_target
-                mantle_array(j) = n_original + i
+                mantle_array(j) = n - num_surface_target + i
+                j = j+1
             END DO
                 
                 
