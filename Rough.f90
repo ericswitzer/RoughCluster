@@ -156,7 +156,7 @@ MODULE rough_cluster_module
         
             IMPLICIT NONE
             
-            INTEGER*8 :: i, j, num_surface_target, random_number, n_original
+            INTEGER*8 :: i, j, num_surface_target, random_number, n_original, index
             INTEGER*8, INTENT(inout) :: n
             INTEGER*8, DIMENSION(n) :: track
             REAL*8, INTENT(in) :: desired_sigma_percent
@@ -168,7 +168,7 @@ MODULE rough_cluster_module
             REAL*8, DIMENSION(:), ALLOCATABLE :: r_random_array
             REAL*8, DIMENSION(:,:), ALLOCATABLE :: temp
             INTEGER*8, INTENT(out) :: n_mantle
-            REAL*8, DIMENSION(:), ALLOCATABLE, INTENT(out) :: mantle_array
+            INTEGER*8, DIMENSION(:), ALLOCATABLE, INTENT(out) :: mantle_array
             REAL*8 :: pi_agnost
             
             REAL*8 :: radius_mantle_avg, radius_mantle_avg_sq, rho_mantle_avg, radius_new_max, radius_new_max_sq

@@ -7,7 +7,8 @@ PROGRAM main
     INTEGER*8                              :: i, n, nsteps, n_mantle
     REAL*8                                 :: rcutoff
     REAL*8,    DIMENSION(3)                :: r_com, v_com                 ! Dummy center of mass
-    REAL*8,    DIMENSION(:,:), ALLOCATABLE :: r, v, f, mantle_array    ! Postion, Velocity, Force
+    INTEGER*8, DIMENSION(:), ALLOCATABLE   :: mantle_array
+    REAL*8,    DIMENSION(:,:), ALLOCATABLE :: r, v, f                      ! Postion, Velocity, Force
      
     
     ! Read number of particles
