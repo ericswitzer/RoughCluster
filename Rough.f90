@@ -309,7 +309,6 @@ MODULE rough_cluster_module
                 END IF
             END DO
             ! Add new mantle atoms
-            n_original = n - num_surface_taget
             DO i=1,num_surface_target
                 mantle_array(j) = n_original + i
             END DO
